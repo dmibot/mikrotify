@@ -1,7 +1,7 @@
 
 # Mikrotify
 
-Mikrotify is a RouterOS automation tool designed for managing and configuring Telegram notifications and interactions with Mikrotik routers. It allows you to send and receive notifications via Telegram and configure your router through chat commands.
+Mikrotify adalah kumpulan skrip yang dirancang untuk RouterOS guna mengotomatisasi konfigurasi dan interaksi dengan router Mikrotik melalui Telegram. Mikrotify mendukung pengiriman notifikasi, pengelolaan event, dan penerimaan perintah melalui Telegram, sehingga memudahkan pengelolaan infrastruktur jaringan secara jarak jauh.
 
 ## Fitur
 - **Telegram Notifications**: Kirim pemberitahuan melalui Telegram mengenai status dan peringatan dari RouterOS.
