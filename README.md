@@ -13,8 +13,6 @@ Repo ini berisi kumpulan script RouterOS yang bisa kamu import sebagai **BaseCon
 ![Language: RouterOS Script](https://img.shields.io/badge/Language-RouterOS%20Script-lightgrey)
 ![Status: Experimental](https://img.shields.io/badge/Status-Experimental-orange)
 
-*(Tambahkan badge stars/issues sendiri kalau repo sudah ada, misalnya:  
-https://img.shields.io/github/stars/DmiBot/mikrotify?style=social)*
 
 ---
 
