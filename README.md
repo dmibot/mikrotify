@@ -230,25 +230,25 @@ Kalau pesan ini masuk ke Telegram, berarti koneksi + konfigurasi **mikrotify** s
 
 Berikut adalah struktur repositori **Mikrotify**
 ```` ``` ````
-mikrotify/
-├── src/
-│ ├── BaseConfigTelegram.rsc # Skrip utama untuk konfigurasi dan pengaturan bot Telegram
-│ ├── TgSendMarkdown.rsc # Skrip untuk mengirim pesan sederhana menggunakan format Markdown
-│ ├── TgSendTable.rsc # Skrip untuk mengirim pesan berupa tabel
-│ ├── TgPadRight.rsc # Skrip untuk penyesuaian padding di tabel
-│ ├── TgDebounce.rsc # Skrip untuk mengatur debounce (anti spam) pada notifikasi
-│ ├── TgRenderTemplate.rsc # Skrip untuk merender template pesan
-│ ├── TgDigestAppend.rsc # Skrip untuk menambah data ke dalam digest
-│ ├── TgDigestFlush.rsc # Skrip untuk mengirimkan digest (ringkasan) secara berkala
-│ ├── TgSelfTest.rsc # Skrip untuk pengecekan integrasi Telegram
-│ └── notification-telegram.rsc # Skrip untuk pengaturan dan pengiriman notifikasi Telegram
-│
-├── examples/
-│ └── example_script.rsc # Contoh skrip penggunaan Mikrotify dalam berbagai skenario
-│
-├── LICENSE.md # Lisensi GNU 3.0
-├── .gitignore # File untuk mengabaikan file yang tidak perlu dalam repo
-└── Makefile # File untuk otomatisasi build dan pengaturan repo
+```` ``` ````mikrotify/
+```` ``` ````├── src/
+```` ``` ````│ ├── BaseConfigTelegram.rsc # Skrip utama untuk konfigurasi dan pengaturan bot Telegram
+```` ``` ````│ ├── TgSendMarkdown.rsc # Skrip untuk mengirim pesan sederhana menggunakan format Markdown
+```` ``` ````│ ├── TgSendTable.rsc # Skrip untuk mengirim pesan berupa tabel
+```` ``` ````│ ├── TgPadRight.rsc # Skrip untuk penyesuaian padding di tabel
+```` ``` ````│ ├── TgDebounce.rsc # Skrip untuk mengatur debounce (anti spam) pada notifikasi
+```` ``` ````│ ├── TgRenderTemplate.rsc # Skrip untuk merender template pesan
+```` ``` ````│ ├── TgDigestAppend.rsc # Skrip untuk menambah data ke dalam digest
+```` ``` ````│ ├── TgDigestFlush.rsc # Skrip untuk mengirimkan digest (ringkasan) secara berkala
+```` ``` ````│ ├── TgSelfTest.rsc # Skrip untuk pengecekan integrasi Telegram
+```` ``` ````│ └── notification-telegram.rsc # Skrip untuk pengaturan dan pengiriman notifikasi Telegram
+```` ``` ````│
+```` ``` ````├── examples/
+```` ``` ````│ └── example_script.rsc # Contoh skrip penggunaan Mikrotify dalam berbagai skenario
+```` ``` ````│
+```` ``` ````├── LICENSE.md # Lisensi GNU 3.0
+```` ``` ````├── .gitignore # File untuk mengabaikan file yang tidak perlu dalam repo
+```` ``` ````└── Makefile # File untuk otomatisasi build dan pengaturan repo
 
 
 ---
