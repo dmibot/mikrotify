@@ -1,28 +1,20 @@
-<p align="center">
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3">
-  </a>
-  <a href="https://github.com/DmiBot/mikrotify/stargazers">
-    <img src="https://img.shields.io/github/stars/DmiBot/mikrotify?style=social" alt="GitHub stars">
-  </a>
-  <a href="https://github.com/DmiBot/mikrotify/issues">
-    <img src="https://img.shields.io/github/issues/DmiBot/mikrotify" alt="GitHub issues">
-  </a>
-  <img src="https://img.shields.io/badge/RouterOS-7.0%2B-FF6C00?logo=mikrotik&logoColor=white" alt="RouterOS 7+">
-  <img src="https://img.shields.io/badge/Telegram-Bot-26A5E4?logo=telegram&logoColor=white" alt="Telegram Bot">
-  <img src="https://img.shields.io/badge/Language-RouterOS%20Script-lightgrey" alt="RouterOS Script">
-  <img src="https://img.shields.io/badge/Status-Experimental-orange" alt="Status: Experimental">
-</p>
+# mikrotify
 
-
-
-
-
-
-Framework notifikasi **Telegram** untuk **MikroTik RouterOS**  
+Framework notifikasi **Telegram** untuk **MikroTik RouterOS**.  
 Fokus ke: **MarkdownV2**, queue, retry, debounce, digest, logging, dan health check.
 
 Repo ini berisi kumpulan script RouterOS yang bisa kamu import sebagai **BaseConfig**, lalu dipanggil dari script lain (PPPoE monitor, Netwatch, DHCP, dsb) tanpa perlu nulis ulang fungsi-fungsi dasar.
+
+---
+
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
+![RouterOS 7+](https://img.shields.io/badge/RouterOS-7.0%2B-FF6C00?logo=mikrotik&logoColor=white)
+![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-26A5E4?logo=telegram&logoColor=white)
+![Language: RouterOS Script](https://img.shields.io/badge/Language-RouterOS%20Script-lightgrey)
+![Status: Experimental](https://img.shields.io/badge/Status-Experimental-orange)
+
+*(Tambahkan badge stars/issues sendiri kalau repo sudah ada, misalnya:  
+https://img.shields.io/github/stars/DmiBot/mikrotify?style=social)*
 
 ---
 
@@ -30,11 +22,13 @@ Repo ini berisi kumpulan script RouterOS yang bisa kamu import sebagai **BaseCon
 
 - ✅ **MarkdownV2 ready**  
   - Escape karakter spesial otomatis (`_ * [ ] ( ) ~ \` > # + - = | { } . !`)  
-  - Support **judul bold**, `code block`, dan **tabel rapi** via monospace.
+  - Support judul **bold**, code block, dan **tabel rapi** via monospace.
 
 - ✅ **BaseConfig terpusat**  
-  - Satu script berisi: token, chat ID, helper string, URL encode, dsb.  
-  - Script lain cukup panggil: `:global BaseConfigTelegram; $BaseConfigTelegram;`
+  - Satu script berisi: token, chat ID, helper string, URL encode, queue, dll.  
+  - Script lain cukup panggil:
+    
+        :global BaseConfigTelegram; $BaseConfigTelegram;
 
 - ✅ **Queue & Retry (reliable send)**  
   - Kalau `/tool fetch` ke Telegram gagal → pesan dimasukkan ke queue.  
@@ -50,8 +44,8 @@ Repo ini berisi kumpulan script RouterOS yang bisa kamu import sebagai **BaseCon
   - Contoh: rekap PPPoE, DHCP, atau error tertentu tiap 10 menit.
 
 - ✅ **Template event**  
-  - `TgTemplates` + `TgRenderTemplate` → bikin teks notifikasi konsisten, gampang dirapikan.  
-  - Misal template `pppoe_down`, `netwatch_event`, dll.
+  - `TgTemplates` + `TgRenderTemplate` → bikin teks notifikasi konsisten dan gampang dirapikan.  
+  - Misal template `pppoe_down`, `netwatch_event`, dsb.
 
 - ✅ **Logging wrapper**  
   - `TgLog level msg [toTelegram]` → tulis ke `/log` dan opsional kirim ke Telegram.  
@@ -65,11 +59,12 @@ Repo ini berisi kumpulan script RouterOS yang bisa kamu import sebagai **BaseCon
 
 ## 🧱 Requirements
 
-- **RouterOS**: minimal v7.x (di-develop & dites di 7.20.x)  
-- **Router**: perangkat Mikrotik yang bisa akses `https://api.telegram.org`  
+- **RouterOS**: minimal v7.x  
+  (dikembangkan & dites di **RouterOS v7.20.x / hAP ax²**)
+- **Router**: perangkat MikroTik yang bisa akses `https://api.telegram.org`
 - **Bot Telegram**:
   - Buat bot via `@BotFather`
-  - Dapatkan `BOT_TOKEN`
+  - Simpan `BOT_TOKEN`
   - Dapatkan `CHAT_ID` (user / group / channel)
 
 ---
@@ -83,112 +78,188 @@ Repo ini berisi kumpulan script RouterOS yang bisa kamu import sebagai **BaseCon
 
 2. **Import BaseConfig ke RouterOS**
 
-   - Copy isi script `BaseConfig-Telegram.rsc` dari repo ini.
+   - Ambil isi script `BaseConfig-Telegram.rsc` dari folder `base/` repo ini.
    - Di WinBox / WebFig → **System → Scripts** → Add → paste script → `Run Script`.
 
 3. **Edit konfigurasi di BaseConfig**
 
    Di dalam `BaseConfigTelegram`, ubah:
 
-   ```rsc
-   :global TgToken  "ISI_TOKEN_BOT_DISINI";
-   :global TgChatId "ISI_CHAT_ID_DISINI";
+       :global TgToken  "ISI_TOKEN_BOT_DISINI";
+       :global TgChatId "ISI_CHAT_ID_DISINI";
 
+4. (Opsional) Atur **scheduler** untuk:
+   - `tg_flush_queue` (otomatis dibuat BaseConfig kalau ada error kirim)
+   - digest PPPoE / laporan berkala lain  
+   - health check harian
 
-🚀 Cara Pakai (Contoh)
-1. Kirim pesan sederhana
-:global BaseConfigTelegram; $BaseConfigTelegram;
-:global TgSendMarkdown;
+---
 
-$TgSendMarkdown "Halo dari mikrotify" "Ini pesan test dari RouterOS.";
+## 🧠 Fungsi Global yang Disediakan
 
-2. Kirim tabel status interface (tabel rapi)
-:global BaseConfigTelegram; $BaseConfigTelegram;
-:global TgSendTable;
-:global TgPadRight;
+Setelah `BaseConfig-Telegram.rsc` dijalankan, kamu akan punya beberapa global function, di antaranya:
 
-:local body "";
+**Format & Template:**
 
-:set body ([$TgPadRight "NAME" 16] . \
-           [$TgPadRight "STATUS" 8] . \
-           [$TgPadRight "RX-BYTE" 14] . \
-           "TX-BYTE\n");
-:set body ($body . "----------------  -------  ------------  ------------\n");
+- `TgEscapeMarkdown` – escape teks untuk MarkdownV2  
+- `TgPadRight` – padding kanan untuk bikin tabel rapi  
+- `TgSendMarkdown` – kirim pesan biasa (subject + body + optional link)  
+- `TgSendTable` – kirim teks sebagai tabel (code block)  
+- `TgRenderTemplate` – render teks dari template + context
 
-:foreach i in=[/interface print as-value] do={
-  :local name    ($i->"name");
-  :local running ($i->"running");
-  :local rx      ($i->"rx-byte");
-  :local tx      ($i->"tx-byte");
+**Reliability:**
 
-  :local st;
-  :if ($running = true) do={ :set st "up"; } else={ :set st "down"; }
+- `TgQueue` + `TgFlushQueue` – queue & retry  
+- `TgDebounce` – batasi frekuensi event per key  
+- `TgDigestAppend` / `TgDigestFlush` – buffer & kirim digest
 
-  :set body ($body . \
-    [$TgPadRight $name 16] . \
-    [$TgPadRight $st 8] . \
-    [$TgPadRight $rx 14] . \
-    $tx . "\n");
-}
+**Convenience:**
 
-$TgSendTable "Status Interface" $body;
+- `TgLog` – wrapper logging + optional Telegram  
+- `TgSelfTest` – kirim pesan test  
+- `TgDebug` – flag untuk debug
 
-3. Netwatch dengan debounce (anti spam)
+Detail implementasi ada di file `base/BaseConfig-Telegram.rsc`.
 
-Di Netwatch → host → tab Down:
+---
 
-:global BaseConfigTelegram; $BaseConfigTelegram;
-:global TgDebounce;
-:global TgRenderTemplate;
-:global TgSendMarkdown;
+## 🚀 Cara Pakai (Contoh)
 
-# maksimal 1 notif per 5 menit per host
-:if ([$TgDebounce ("NETWATCH_" . $host) 5m] = false) do={ :return; }
+> Penting: sebelum pakai contoh di bawah, pastikan BaseConfig sudah jalan:
+>
+>     :global BaseConfigTelegram; $BaseConfigTelegram;
 
-:local msg [$TgRenderTemplate "netwatch_event" {
-  host=$host;
-  status=$status;
-  time=([/system/clock get date] . " " . [/system/clock get time]);
-}];
+### 1. Kirim pesan sederhana
 
-$TgSendMarkdown "Netwatch DOWN" $msg;
+    :global BaseConfigTelegram; $BaseConfigTelegram;
+    :global TgSendMarkdown;
 
-4. Digest PPPoE (rekap tiap 10 menit)
+    $TgSendMarkdown "Halo dari mikrotify" "Ini pesan test dari RouterOS.";
 
-Saat event terjadi, kumpulkan:
+---
 
-:global BaseConfigTelegram; $BaseConfigTelegram;
-:global TgDigestAppend;
+### 2. Kirim tabel status interface (tabel rapi)
 
-$TgDigestAppend "pppoe" ("[" . [/system/clock get time] . "] ISP1 down di pppoe-out1");
+    :global BaseConfigTelegram; $BaseConfigTelegram;
+    :global TgSendTable;
+    :global TgPadRight;
 
+    :local body "";
 
-Scheduler tiap 10 menit:
+    :set body ([$TgPadRight "NAME" 16] . \
+               [$TgPadRight "STATUS" 8] . \
+               [$TgPadRight "RX-BYTE" 14] . \
+               "TX-BYTE\n");
+    :set body ($body . "----------------  -------  ------------  ------------\n");
 
-:global BaseConfigTelegram; $BaseConfigTelegram;
-:global TgDigestFlush;
+    :foreach i in=[/interface print as-value] do={
+      :local name    ($i->"name");
+      :local running ($i->"running");
+      :local rx      ($i->"rx-byte");
+      :local tx      ($i->"tx-byte");
 
-$TgDigestFlush "pppoe" "Digest PPPoE";
+      :local st;
+      :if ($running = true) do={ :set st "up"; } else={ :set st "down"; }
 
-🧪 Health Check
+      :set body ($body . \
+                 [$TgPadRight $name 16] . \
+                 [$TgPadRight $st 8] . \
+                 [$TgPadRight $rx 14] . \
+                 $tx . "\n");
+    }
+
+    $TgSendTable "Status Interface" $body;
+
+---
+
+### 3. Netwatch dengan debounce (anti spam)
+
+Di **Netwatch → host → tab `Down`**, isi script berikut:
+
+    :global BaseConfigTelegram; $BaseConfigTelegram;
+    :global TgDebounce;
+    :global TgRenderTemplate;
+    :global TgSendMarkdown;
+
+    # maksimal 1 notif per 5 menit per host
+    :if ([$TgDebounce ("NETWATCH_" . $host) 5m] = false) do={
+      :return;
+    }
+
+    :local msg [$TgRenderTemplate "netwatch_event" {
+      host=$host;
+      status=$status;
+      time=([/system/clock get date] . " " . [/system/clock get time]);
+    }];
+
+    $TgSendMarkdown "Netwatch DOWN" $msg;
+
+---
+
+### 4. Digest PPPoE (rekap tiap 10 menit)
+
+Saat event PPPoE terjadi, kumpulkan baris ke buffer:
+
+    :global BaseConfigTelegram; $BaseConfigTelegram;
+    :global TgDigestAppend;
+
+    $TgDigestAppend "pppoe" ("[" . [/system/clock get time] . "] ISP1 down di pppoe-out1");
+
+Lalu buat **scheduler tiap 10 menit** (misalnya di `/system scheduler`):
+
+    :global BaseConfigTelegram; $BaseConfigTelegram;
+    :global TgDigestFlush;
+
+    $TgDigestFlush "pppoe" "Digest PPPoE";
+
+---
+
+### 5. 🧪 Health Check (Self Test)
 
 Untuk memastikan integrasi Telegram OK:
 
-:global BaseConfigTelegram; $BaseConfigTelegram;
-:global TgSelfTest;
+    :global BaseConfigTelegram; $BaseConfigTelegram;
+    :global TgSelfTest;
 
-$TgSelfTest;
+    $TgSelfTest;
 
+Kalau pesan ini masuk ke Telegram, berarti koneksi + konfigurasi **mikrotify** sudah benar.
 
-Kalau pesan masuk ke Telegram, berarti koneksi + config sudah benar.
+---
 
-📜 License
-GNU 3.0
+## 📁 Struktur Repo (disarankan)
 
-📝 Catatan
+Contoh struktur repo:
 
-Script ini bukan fork & bukan copy-paste dari repo lain; konsep diadaptasi ulang dengan struktur fungsi sendiri.
+    mikrotify/
+    ├─ base/
+    │  └─ BaseConfig-Telegram.rsc
+    ├─ examples/
+    │  ├─ example-send-test.rsc
+    │  ├─ example-interface-status.rsc
+    │  ├─ example-netwatch-debounce.rsc
+    │  ├─ example-pppoe-digest.rsc
+    │  └─ example-selftest.rsc
+    ├─ README.md
+    └─ LICENSE
 
-Fokus repo ini adalah jadi “toolkit notifikasi” yang bisa ditempel di berbagai skenario (Netwatch, PPPoE, DHCP, monitoring custom, dsb).
+---
 
+## 📜 License
 
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.  
+You may copy, distribute and modify the software as long as you track changes/dates in source files and keep the same license.
+
+See the `LICENSE` file for the full text.
+
+---
+
+## 📝 Catatan
+
+- Script ini **bukan fork & bukan copy-paste** dari repo lain; konsep diadaptasi ulang dengan struktur fungsi sendiri.
+- Fokus repo ini adalah jadi **toolkit notifikasi** yang bisa ditempel di berbagai skenario:
+  - Netwatch
+  - PPPoE
+  - DHCP
+  - monitoring custom
+  - dan lain-lain sesuai kreativitas kamu.
