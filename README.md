@@ -228,6 +228,8 @@ Kalau pesan ini masuk ke Telegram, berarti koneksi + konfigurasi **mikrotify** s
 
 ## 📁 Struktur Repo 
 
+Berikut adalah struktur repositori **Mikrotify**
+```` ``` ````
 mikrotify/
 ├── src/
 │ ├── BaseConfigTelegram.rsc # Skrip utama untuk konfigurasi dan pengaturan bot Telegram
